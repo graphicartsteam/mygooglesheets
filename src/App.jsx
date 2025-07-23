@@ -9,18 +9,26 @@ import {
 } from '@mui/material'; import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
 import DescriptionIcon from '@mui/icons-material/Description';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const SHEETS_API_URL = 'https://script.googleusercontent.com/a/macros/champrosports.com/echo?user_content_key=AehSKLj012Ycrk9rIs1l1Lrp5bOeooAh81j5AbRvO-PAwQGHOY2jcdeAGf-46HaCz-HdFERxb2OMH6cBIIbtfPGEStGgCKL9UgQIuHBc5VOzkYmbK7yYC-9yGiaErAshw_OHNN2IODRiag12h3CZi-ezj3ijh7wacsg47s0X9RlTJ9oEaD2T5a7ZDdV0WHSmokz42vbhm5kh5QvHBJ0H6yky5qLgYIvSYaTQoWh_ghEstaev1kB_8ECBT1TydvvAumpnSUFrB48As14tE6X3LXJ4enTYwFIjgpZ4u--jKWLMBgFmtxuGHuyd1PUnLC22ew&lib=MHQJ5hHromMllYzD29Aj9ayfZLrbal3o4';
 
 export default function App() {
   const [search, setSearch] = useState('');
   const [sheets, setSheets] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetch(SHEETS_API_URL)
       .then(res => res.json())
-      .then(data => setSheets(data))
-      .catch(err => console.error('Error fetching sheets:', err));
+      .then(data => {
+        setSheets(data);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('Error fetching sheets:', err);
+        setLoading(false);
+      });
   }, []);
 
   const renderSectionCards = (section) => {
@@ -75,7 +83,7 @@ export default function App() {
             <Grid item xs={12} md={6}>
               <Box
                 sx={{
-                  backgroundColor: '#5babfcff',
+                  backgroundColor: '#44b9e4',
                   borderRadius: 2,
                   p: 4,
                   mb: 4,
@@ -131,7 +139,6 @@ export default function App() {
                 </a>{' '}
                 used to register and manage entries.
               </Typography>
-
             </Grid>
           </Grid>
         </Grid>
@@ -186,6 +193,7 @@ export default function App() {
         <Grid container spacing={4} justifyContent="center" sx={{ mt: 6 }}>
           <Grid item xs={12} md={11}>
             <Grid container spacing={15} justifyContent="center">
+
               {/* General */}
               <Grid item xs={12} md={4}>
                 <Box textAlign="center" mb={3}>
@@ -197,8 +205,13 @@ export default function App() {
                       <Typography variant="subtitle1">Employees and Finance Info</Typography>
                       <Typography variant="body2" gutterBottom>Names, dates, salary and expenses tracking</Typography>
                     </Box>
-
-                    {renderSectionCards('General')}
+                    {loading ? (
+                      <Box display="flex" justifyContent="center" mt={3}>
+                        <CircularProgress />
+                      </Box>
+                    ) : (
+                      renderSectionCards('General')
+                    )}
                   </Grid>
                 </Grid>
               </Grid>
@@ -208,13 +221,17 @@ export default function App() {
                 <Box textAlign="center" mb={3}>
                   <Typography variant="h6" fontWeight="bold">Proofing</Typography>
                 </Box>
-
                 <Box textAlign="center" mb={3}>
                   <Typography variant="subtitle1">Numbers Data & Juice Box</Typography>
                   <Typography variant="body2" gutterBottom>Names and categorized info</Typography>
                 </Box>
-
-                {renderSectionCards('Proofing')}
+                {loading ? (
+                  <Box display="flex" justifyContent="center" mt={3}>
+                    <CircularProgress />
+                  </Box>
+                ) : (
+                  renderSectionCards('Proofing')
+                )}
               </Grid>
 
               {/* Embroidery */}
@@ -222,18 +239,23 @@ export default function App() {
                 <Box textAlign="center" mb={3}>
                   <Typography variant="h6" fontWeight="bold">Embroidery</Typography>
                 </Box>
-
                 <Box textAlign="center" mb={3}>
                   <Typography variant="subtitle1">Daily Numbers & Caps Analysis</Typography>
                   <Typography variant="body2" gutterBottom>Names, dates, updates, and reprints</Typography>
                 </Box>
-
-                {renderSectionCards('Embroidery')}
+                {loading ? (
+                  <Box display="flex" justifyContent="center" mt={3}>
+                    <CircularProgress />
+                  </Box>
+                ) : (
+                  renderSectionCards('Embroidery')
+                )}
               </Grid>
+
             </Grid>
           </Grid>
         </Grid>
       )}
     </Box>
   );
-}
+} 
